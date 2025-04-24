@@ -1,0 +1,44 @@
+# Write github action to run pre-commit hooks
+name: Run pre-commit hooks
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - main
+      - develop
+  push:
+    branches:
+      - main
+      - develop
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to run pre-commit hooks on'
+        required: true
+        default: 'main'
+jobs:
+  run-pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.12'
+
+      - name: Install poetry and dependencies
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          poetry config virtualenvs.create false
+          poetry install --no-interaction --no-root
+
+      - name: Run pre-commit hooks
+        run: |
+          inv pre-commit.run-hooks
+          if [ $? -ne 0 ]; then
+            echo "Pre-commit hooks failed. Please fix the issues and try again."
+            exit 1
+          fi

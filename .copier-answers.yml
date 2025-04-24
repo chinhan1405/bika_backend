@@ -1,0 +1,11 @@
+# Answers what were given during boilerplate initialization
+# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
+# https://copier.readthedocs.io/en/stable/configuring/#the-copier-answersyml-file
+_commit: 8e279ab
+_src_path: git@github.com:saritasa-nest/saritasa-python-boilerplate-django.git
+jira_key: BIKA
+project_name: BIKA
+python_version: '3.12'
+repo_frontend_name: bika-frontend
+repo_name: bika-backend
+subdomain: bika

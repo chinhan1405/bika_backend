@@ -1,0 +1,56 @@
+{
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/.pytest_cache": true,
+    "**/.mypy_cache": true,
+    "**/.ruff_cache": true,
+  },
+
+  "editor.rulers": [79],
+
+  "editor.bracketPairColorization.enabled": true,
+
+  "python.analysis.typeCheckingMode": "basic",
+
+  "python.analysis.inlayHints.functionReturnTypes": true,
+
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestEnabled": true,
+
+  "gitlens.autolinks": [
+    {
+      "prefix": "BIKA-",
+      "url": "https://saritasa.atlassian.net/browse/BIKA-<num>"
+    },
+    {
+      "prefix": "SA3P-",
+      "url": "https://saritasa.atlassian.net/browse/SA3P-<num>"
+    },
+    {
+      "prefix": "SD-",
+      "url": "https://saritasa.atlassian.net/browse/SD-<num>"
+    },
+    {
+      "prefix": "GHSA-",
+      "url": "https://github.com/advisories/GHSA-<num>"
+    }
+  ],
+
+  "[python]": {
+    "editor.formatOnSave": false,
+    "editor.defaultFormatter": "charliermarsh.ruff"
+  },
+
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "server": "postgres",
+      "port": 5432,
+      "driver": "PostgreSQL",
+      "database": "bika-backend-dev",
+      "username": "bika-backend-user",
+      "password": "manager",
+      "name": "bika-backend-dev"
+    },
+  ],
+}
