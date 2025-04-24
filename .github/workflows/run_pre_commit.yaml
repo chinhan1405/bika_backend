@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -42,3 +42,47 @@ jobs:
             echo "Pre-commit hooks failed. Please fix the issues and try again."
             exit 1
           fi
+
+  deploy:
+    needs: run-pre-commit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Start SSH Agent and add key
+        uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Add EC2 host to known_hosts
+        run: |
+          ssh-keyscan -H $EC2_HOST >> ~/.ssh/known_hosts
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+
+      - name: Rsync project to EC2
+        run: |
+          rsync -avz --exclude='.git' --exclude='__pycache__' ./ $EC2_USER@$EC2_HOST:/home/$EC2_USER/bika-backend/
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USER: ${{ secrets.EC2_USER }}
+
+      - name: SSH and deploy
+        run: |
+          ssh -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
+            cd bika-backend
+
+            if [ ! -d ".venv" ]; then
+              uv venv
+            fi
+            source .venv/bin/activate
+            poetry install
+
+            python manage.py migrate
+            python manage.py collectstatic --noinput
+
+          EOF
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USER: ${{ secrets.EC2_USER }}
