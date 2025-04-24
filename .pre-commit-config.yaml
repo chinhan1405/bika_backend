@@ -67,21 +67,3 @@ repos:
         args: [
           "--fix",
         ]
-
-  - repo: local
-    hooks:
-      - id: check_new_migrations
-        name: check for new migrations
-        entry: inv django.check-new-migrations
-        language: system
-        pass_filenames: false
-        types: [ file ]
-        stages: [ pre-push ]
-
-      - id: tests
-        name: run tests
-        entry: inv pytest.run --params="--numprocesses auto --create-db --cov=."
-        language: system
-        pass_filenames: false
-        types: [ python ]
-        stages: [ pre-push ]

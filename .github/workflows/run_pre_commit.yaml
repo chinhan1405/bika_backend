@@ -28,16 +28,6 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install Docker
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y docker.io
-          sudo systemctl start docker
-          sudo systemctl enable docker
-
-      - name: Initialize project
-        run: inv project.init
-
       - name: Install poetry and dependencies
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
