@@ -8,6 +8,8 @@ import citext
 
 from apps.core.models import BaseModel
 
+from ..constants import UserRole
+
 
 class UserManager(DjangoUserManager):
     """Adjusted user manager that works w/o `username` field."""
@@ -66,6 +68,12 @@ class User(
         verbose_name=_("Email address"),
         max_length=254,  # to be compliant with RFCs 3696 and 5321
         unique=True,
+    )
+    role = models.CharField(
+        verbose_name=_("Role"),
+        max_length=20,
+        choices=UserRole.choices,
+        default=UserRole.STUDENT,
     )
     is_staff = models.BooleanField(
         verbose_name=_("Staff status"),

@@ -31,6 +31,7 @@ LOCAL_APPS = (
     "apps.core",
     "apps.auth",
     "apps.users",
+    "apps.assignment",
 )
 
 INSTALLED_APPS += DRF_PACKAGES + THIRD_PARTY + HEALTH_CHECKS_APPS + LOCAL_APPS

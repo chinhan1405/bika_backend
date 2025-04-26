@@ -89,6 +89,7 @@ pyuwsgi = "^2.0.28.post1"
 # uwsgitop is a top-like command that uses the uWSGI Stats Server to monitor your uwsgi application.
 # https://pypi.org/project/uwsgitop/
 uwsgitop = "^0.12"
+gunicorn = "^23.0.0"
 
 [tool.poetry.group.dev.dependencies]
 # The Django Debug Toolbar is a configurable set of panels that display various debug information
