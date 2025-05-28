@@ -3,6 +3,6 @@ from rest_framework.routers import DefaultRouter
 from . import views
 
 router = DefaultRouter()
-router.register(r"assignment", views.AssignmentViewSet)
-router.register(r"task", views.TaskViewSet)
+router.register(r"assignments", views.AssignmentViewSet)
+router.register(r"tasks", views.TaskViewSet)
 urlpatterns = router.urls

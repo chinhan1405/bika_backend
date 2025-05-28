@@ -13,6 +13,7 @@ class UserSerializer(ModelBaseSerializer):
             "first_name",
             "last_name",
             "email",
+            "role",
             "avatar",
             "last_login",
             "created",

@@ -1,3 +1,5 @@
+from rest_framework import serializers
+
 from apps.core.api.serializers import ModelBaseSerializer
 from apps.users.api.serializers import UserSerializer
 
@@ -33,3 +35,13 @@ class TaskSerializer(ModelBaseSerializer):
             "created",
             "modified",
         )
+
+
+class TaskCompletedPercentSerializer(serializers.Serializer):
+    """Serializer for representing percent completed for Task model."""
+
+    percent_completed = serializers.DecimalField(
+        max_digits=3,
+        decimal_places=2,
+        read_only=True,
+    )

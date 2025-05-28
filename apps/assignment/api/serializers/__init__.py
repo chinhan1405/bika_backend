@@ -1,2 +1,2 @@
 from .assignment import AssignmentSerializer
-from .task import TaskSerializer
+from .task import TaskCompletedPercentSerializer, TaskSerializer
