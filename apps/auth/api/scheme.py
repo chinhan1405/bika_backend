@@ -52,3 +52,10 @@ extend_schema_view(
         responses=DetailSerializer,
     ),
 )(views.PasswordResetConfirmView)
+
+extend_schema_view(
+    post=extend_schema(
+        request=serializers.SignupSerializer,
+        responses=serializers.TokenSerializer,
+    ),
+)(views.SignupView)

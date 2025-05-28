@@ -21,6 +21,11 @@ urlpatterns = [
         name="logout-all",
     ),
     path(
+        "signup/",
+        views.SignupView.as_view(),
+        name="signup",
+    ),
+    path(
         "password/reset/",
         views.PasswordResetView.as_view(),
         name="password-reset",

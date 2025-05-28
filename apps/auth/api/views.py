@@ -1,4 +1,4 @@
-from django.contrib.auth import login
+from django.contrib.auth import login, user_logged_in
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import permissions, status
@@ -27,6 +27,32 @@ class LoginView(KnoxLoginView):
         serializer.is_valid(raise_exception=True)
         login(request, serializer.validated_data["user"]) # type: ignore
         return super().post(request, format=None)
+
+
+class SignupView(KnoxLoginView):
+    """User registration view.
+
+    We're using custom one because Knox using basic auth as default
+    authorization method.
+
+    """
+
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = ()
+
+    def post(self, request, *args, **kwargs) -> Response:
+        """Register user and get auth token with expiry."""
+        serializer = serializers.SignupSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        guest = serializer.save()
+        login(request, guest)
+        instance, token = self.create_token()
+        user_logged_in.send(
+            sender=request.user.__class__,
+            request=request,
+            user=request.user,
+        )
+        return self.get_post_response(request, token, instance)
 
 
 class PasswordResetView(GenericAPIView):

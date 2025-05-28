@@ -9,6 +9,8 @@ from django.utils.translation import gettext_lazy as _
 
 from rest_framework import exceptions, serializers
 
+from apps.core.api.serializers import BaseSerializer
+from apps.users import constants as users_constants
 from apps.users.api.serializers import UserSerializer
 from apps.users.models import User
 from libs.open_api.serializers import OpenApiSerializer
@@ -70,6 +72,49 @@ class TokenSerializer(OpenApiSerializer):
     )
     token = serializers.CharField(help_text="Token itself")
     user = UserSerializer()
+
+
+class SignupSerializer(BaseSerializer):
+    """Provide logic to sign up."""
+
+    first_name = serializers.CharField(
+        max_length=30,
+        required=False,
+        allow_blank=True,
+    )
+    last_name = serializers.CharField(
+        max_length=30,
+        required=False,
+        allow_blank=True,
+    )
+    email = serializers.EmailField()
+    password = serializers.CharField(write_only=True)
+
+    def validate_password(self, value: str) -> str:
+        """Run additional password validation rules."""
+        password_validation.validate_password(value)
+        return value
+
+    def validate(self, attrs: dict) -> dict:
+        """Run extra validation."""
+        attrs = super().validate(attrs)
+        if User.objects.filter(email=attrs["email"]).exists():
+            raise serializers.ValidationError(
+                {"email": _("Account with this email already exists.")},
+            )
+        return attrs
+
+    def save(self, **kwargs) -> User:
+        """Create the member account."""
+        user = User(
+            first_name=self.validated_data.get("first_name", ""),
+            last_name=self.validated_data.get("last_name", ""),
+            email=self.validated_data["email"],
+            role=users_constants.UserRole.STUDENT,
+        )
+        user.set_password(self.validated_data["password"])
+        user.save()
+        return user
 
 
 class PasswordResetSerializer(serializers.Serializer):
