@@ -7,4 +7,4 @@ class UserRole(models.TextChoices):
 
     ADMIN = "admin", _("Admin")
     STUDENT = "student", _("Student")
-    TEACHER = "teacher", _("Teacher")
+    LECTURER = "lecturer", _("Lecturer")

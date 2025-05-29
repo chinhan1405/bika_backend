@@ -35,3 +35,6 @@ class Assignment(BaseModel):
     class Meta:
         verbose_name = _("Assignment")
         verbose_name_plural = _("Assignments")
+
+    def __str__(self) -> str:
+        return self.title

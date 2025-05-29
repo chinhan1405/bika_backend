@@ -3,6 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from apps.core.api.mixins import UpdateModelWithoutPatchMixin
 from apps.core.api.views import BaseViewSet
+from apps.users.permissions import IsAdmin, IsLecturer
 
 from ... import filters, models
 from .. import serializers
@@ -23,6 +24,11 @@ class AssignmentViewSet(
     base_permission_classes = (
         IsAuthenticated,
     )
+    extra_permissions_map = {
+        "create": (IsLecturer | IsAdmin,),
+        "update": (IsLecturer | IsAdmin,),
+        "delete": (IsLecturer | IsAdmin,),
+    }
     search_fields = (
         "title",
         "creator__email",

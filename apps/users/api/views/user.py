@@ -1,4 +1,4 @@
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAuthenticated
 
 from apps.core.api.views import ReadOnlyViewSet
 
@@ -12,7 +12,7 @@ class UsersViewSet(ReadOnlyViewSet):
     queryset = models.User.objects.all()
     serializer_class = serializers.UserSerializer
     base_permission_classes = (
-        IsAdminUser,
+        IsAuthenticated,
     )
     search_fields = (
         "first_name",

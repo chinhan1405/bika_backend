@@ -49,3 +49,6 @@ class Task(BaseModel):
     class Meta:
         verbose_name = _("Task")
         verbose_name_plural = _("Tasks")
+
+    def __str__(self) -> str:
+        return f"{self.title} ({self.assignment.title})"

@@ -9,7 +9,6 @@ from drf_spectacular.utils import extend_schema
 
 from apps.core.api.mixins import UpdateModelWithoutPatchMixin
 from apps.core.api.views import BaseViewSet
-from apps.users import constants as user_constants
 
 from ... import constants, filters
 from ... import models as assignment_model
@@ -21,7 +20,6 @@ class TaskViewSet(
     mixins.RetrieveModelMixin,
     mixins.CreateModelMixin,
     UpdateModelWithoutPatchMixin,
-    mixins.DestroyModelMixin,
     BaseViewSet,
 ):
     """Api viewset for Task model."""
@@ -42,18 +40,6 @@ class TaskViewSet(
         "created",
     )
     filterset_class = filters.TaskFilter
-
-    def get_queryset(self):
-        """Get queryset for Task model."""
-        user = self.request.user
-        if not user.is_authenticated:
-            return assignment_model.Task.objects.none()
-        queryset = super().get_queryset()
-        if user.role == user_constants.UserRole.STUDENT:
-            queryset = queryset.filter(assignee_id=user.id)
-        elif user.role == user_constants.UserRole.TEACHER:
-            queryset = queryset.filter(assignment__creator_id=user.id)
-        return queryset
 
     @extend_schema(
         responses={
