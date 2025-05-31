@@ -15,8 +15,6 @@ class TaskAdmin(BaseAdmin):
     list_display = (
         "id",
         "title",
-        "assignment",
-        "assignee",
         "status",
         "start",
         "end",
@@ -39,6 +37,7 @@ class TaskAdmin(BaseAdmin):
                 "fields": (
                     "assignment",
                     "assignee",
+                    "creator",
                     "title",
                     "description",
                     "status",
