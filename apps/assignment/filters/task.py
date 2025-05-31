@@ -11,5 +11,6 @@ class TaskFilter(filters.FilterSet):
         fields = (
             "assignee_id",
             "assignment_id",
+            "creator_id",
             "status",
         )

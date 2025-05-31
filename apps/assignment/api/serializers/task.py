@@ -14,6 +14,10 @@ class TaskSerializer(ModelBaseSerializer):
         source="assignment",
         read_only=True,
     )
+    creator_data = UserSerializer(
+        source="creator",
+        read_only=True,
+    )
     assignee_data = UserSerializer(
         source="assignee",
         read_only=True,
@@ -25,6 +29,7 @@ class TaskSerializer(ModelBaseSerializer):
             "id",
             "assignment",
             "assignment_data",
+            "creator_data",
             "assignee",
             "assignee_data",
             "title",

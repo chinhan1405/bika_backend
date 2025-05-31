@@ -15,6 +15,13 @@ class Task(BaseModel):
         related_name="tasks",
         verbose_name=_("Assignment"),
     )
+    creator = models.ForeignKey(
+        "users.User",
+        on_delete=models.SET_NULL,
+        related_name="created_tasks",
+        verbose_name=_("Creator"),
+        null=True,
+    )
     assignee = models.ForeignKey(
         "users.User",
         on_delete=models.SET_NULL,

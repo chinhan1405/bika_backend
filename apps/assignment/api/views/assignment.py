@@ -1,4 +1,6 @@
-from rest_framework import mixins
+from django.utils.translation import gettext_lazy as _
+
+from rest_framework import mixins, response, status
 from rest_framework.permissions import IsAuthenticated
 
 from apps.core.api.mixins import UpdateModelWithoutPatchMixin
@@ -39,3 +41,32 @@ class AssignmentViewSet(
         "created",
     )
     filterset_class = filters.AssignmentFilter
+
+    def create(self, request, *args, **kwargs):
+        """Create a new assignment."""
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.validated_data["creator"] = request.user
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return self.response(
+            serializer.data,
+            status=status.HTTP_201_CREATED,
+            headers=headers,
+        )
+
+    def destroy(self, request, *args, **kwargs):
+        """Delete an assignment."""
+        instance: models.Assignment = self.get_object()
+        if instance.creator != request.user:
+            return response.Response(
+                {
+                    "detail": _(
+                        "You do not have permission "
+                        "to delete this assignment.",
+                    ),
+                },
+                status=status.HTTP_403_FORBIDDEN,
+            )
+        self.perform_destroy(instance)
+        return response.Response(status=status.HTTP_204_NO_CONTENT)

@@ -2,7 +2,7 @@ from decimal import Decimal
 
 from django.db import models
 
-from rest_framework import decorators, mixins, response
+from rest_framework import decorators, mixins, response, status
 from rest_framework.permissions import IsAuthenticated
 
 from drf_spectacular.utils import extend_schema
@@ -20,6 +20,7 @@ class TaskViewSet(
     mixins.RetrieveModelMixin,
     mixins.CreateModelMixin,
     UpdateModelWithoutPatchMixin,
+    mixins.DestroyModelMixin,
     BaseViewSet,
 ):
     """Api viewset for Task model."""
@@ -40,6 +41,31 @@ class TaskViewSet(
         "created",
     )
     filterset_class = filters.TaskFilter
+
+    def create(self, request, *args, **kwargs) -> response.Response:
+        """Create a new task."""
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.validated_data["creator"] = request.user
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return response.Response(
+            serializer.data,
+            status=status.HTTP_201_CREATED,
+            headers=headers,
+        )
+
+    def destroy(self, request, *args, **kwargs) -> response.Response:
+        """Delete a task."""
+        instance: assignment_model.Task = self.get_object()
+        if instance.creator != request.user:
+            return response.Response(
+                {"detail": "You do not have permission to delete this task."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+        self.perform_destroy(instance)
+        return response.Response(status=status.HTTP_204_NO_CONTENT)
+
 
     @extend_schema(
         responses={

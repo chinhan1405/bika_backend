@@ -11,6 +11,7 @@ class TaskFactory(factory.django.DjangoModelFactory):
     assignment = factory.SubFactory(
         "apps.assignment.factories.AssignmentFactory",
     )
+    creator = factory.SubFactory("apps.users.factories.UserFactory")
     assignee = factory.SubFactory("apps.users.factories.UserFactory")
     title = factory.Faker("sentence", nb_words=4)
     description = factory.Faker("text", max_nb_chars=200)
