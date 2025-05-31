@@ -45,8 +45,6 @@ class TaskSerializer(ModelBaseSerializer):
 class TaskCompletedPercentSerializer(serializers.Serializer):
     """Serializer for representing percent completed for Task model."""
 
-    percent_completed = serializers.DecimalField(
-        max_digits=3,
-        decimal_places=2,
+    percent_completed = serializers.IntegerField(
         read_only=True,
     )

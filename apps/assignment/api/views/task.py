@@ -1,4 +1,3 @@
-from decimal import Decimal
 
 from django.db import models
 
@@ -90,7 +89,7 @@ class TaskViewSet(
         )
         serializer = serializers.TaskCompletedPercentSerializer(
             {
-                "percent_completed": Decimal(
+                "percent_completed": round(
                     sum(
                         1 for task in queryset
                         if task.status == constants.TaskStatus.COMPLETED
@@ -104,8 +103,8 @@ class TaskViewSet(
                                 constants.TaskStatus.READY_FOR_REVIEW,
                             )
                         ) or 1
-                    ),
-                ) * 100,
+                    ) * 100,
+                ),
             },
         )
         return response.Response(serializer.data)
