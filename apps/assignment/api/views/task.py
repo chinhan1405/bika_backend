@@ -105,7 +105,7 @@ class TaskViewSet(
                             )
                         ) or 1
                     ),
-                ),
+                ) * 100,
             },
         )
         return response.Response(serializer.data)
