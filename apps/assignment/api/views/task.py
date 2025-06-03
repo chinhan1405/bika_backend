@@ -24,7 +24,11 @@ class TaskViewSet(
 ):
     """Api viewset for Task model."""
 
-    queryset = assignment_model.Task.objects.all()
+    queryset = assignment_model.Task.objects.all().select_related(
+        "assignment",
+        "creator",
+        "assignee",
+    )
     serializer_class = serializers.TaskSerializer
     base_permission_classes = (
         IsAuthenticated,

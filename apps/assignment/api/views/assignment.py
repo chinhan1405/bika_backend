@@ -21,7 +21,9 @@ class AssignmentViewSet(
 ):
     """Api viewset for Assignment model."""
 
-    queryset = models.Assignment.objects.all()
+    queryset = models.Assignment.objects.all().select_related(
+        "creator",
+    )
     serializer_class = serializers.AssignmentSerializer
     base_permission_classes = (
         IsAuthenticated,
